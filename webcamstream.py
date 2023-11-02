@@ -36,19 +36,22 @@ class WebcamStream :
         
  
     def update(self):
-        while True :
-            if self.stopped is True :
-                break
+        try:
+            while True :
+                if self.stopped is True :
+                    break
+                
+                self.grabbed , self.frame = self.video.read()         
             
-            self.grabbed , self.frame = self.video.read()         
-           
-            if self.grabbed is False :
-                print('[Exiting] No more frames to read')
-                self.stopped = True
-                break 
-            
-        self.video.release()        
-           
+                if self.grabbed is False :
+                    print('[Exiting] No more frames to read')
+                    self.stopped = True
+                    break 
+                
+            self.video.release()        
+
+        except Exception as e:
+            print(e)   
    
     def get(self):
         return self.frame

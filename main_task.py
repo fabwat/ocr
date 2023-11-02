@@ -1,4 +1,3 @@
-
 import cv2
 
 
@@ -28,29 +27,33 @@ def draw_ocr( frame, cam_stream):
 
 
        
-def main_task():         
-    icon_size = 68
+def main_task():             
     cam= webcam(0)
     cam.start()  
     
     ocr_stream = ocrwebcam(capture=cam) # 0 id for main camera
     ocr_stream.start()
 
-    cv2.namedWindow("window")    
+    cv2.namedWindow("window")     
+
+    try:
+        while True :
+            if cam.stopped is True :
+                break
+            else :            
+                frame = cam.get()                          
+                                            
+            draw_ocr(frame, ocr_stream)
+            
+            cv2.imshow('window', frame)                             
     
-    while True :
-        if cam.stopped is True :
-            break
-        else :            
-            frame = cam.get()                          
-                                        
-        draw_ocr(frame, ocr_stream)
+            if(  cv2.waitKey(1) & 0xFF == ord('q') or cv2.waitKey(1) & 0xFF == 27 ) :
+                break
+
+    except Exception as e:
+        print(e)
         
-        cv2.imshow('window', frame)
-   
-        if(  cv2.waitKey(1) & 0xFF == ord('q') or cv2.waitKey(1) & 0xFF == 27 ) :
-            break
-   
+
     cam.stop()  
     cv2.destroyAllWindows()
 
